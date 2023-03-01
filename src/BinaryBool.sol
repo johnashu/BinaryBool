@@ -14,7 +14,7 @@ contract BoolBin {
     bytes32 allOff = 0xf000000000000000000000000000000000000000000000000000000000000000;
     bytes32 allOn = 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
 
-    // Colours
+    // Colours to use for high level checks
     bytes32 red = 0xf00000000000000000000000000000000000000000000000000000000000000f;
     bytes32 green = 0xf0000000000000000000000000000000000000000000000000000000000000f0;
     bytes32 blue = 0xf000000000000000000000000000000000000000000000000000000000000f00;
@@ -23,7 +23,12 @@ contract BoolBin {
     bytes32 white = 0xf000000000000000000000000000000000000000000000000000000000f00000;
     bytes32 purple = 0xf00000000000000000000000000000000000000000000000000000000f000000;
     bytes32 pink = 0xf0000000000000000000000000000000000000000000000000000000f0000000;
+    bytes32 gold = 0xf000000000000000000000000000000000000000000000000000000f00000000;
+    bytes32 silver = 0xf00000000000000000000000000000000000000000000000000000f000000000;
+    bytes32 peach = 0xf0000000000000000000000000000000000000000000000000000f0000000000;
+    bytes32 bronze = 0xf000000000000000000000000000000000000000000000000000f00000000000;
 
+    // Max 12 Bools allowed
     struct UserDataStruct {
         bool red;
         bool green;
@@ -33,6 +38,10 @@ contract BoolBin {
         bool white;
         bool purple;
         bool pink;
+        bool gold;
+        bool silver;
+        bool peach;
+        bool bronze;
     }
     // uint64 lockUpTime;
     // bytes32 balance;
@@ -81,7 +90,19 @@ contract BoolBin {
                                             0xf000000000000000000000000000000000000000000000000000000000f00000,
                                             or(
                                                 0xf00000000000000000000000000000000000000000000000000000000f000000,
-                                                0xf0000000000000000000000000000000000000000000000000000000f0000000
+                                                or(
+                                                    0xf0000000000000000000000000000000000000000000000000000000f0000000,
+                                                    or(
+                                                        0xf000000000000000000000000000000000000000000000000000000f00000000,
+                                                        or(
+                                                            0xf00000000000000000000000000000000000000000000000000000f000000000,
+                                                            or(
+                                                                0xf0000000000000000000000000000000000000000000000000000f0000000000,
+                                                                0xf000000000000000000000000000000000000000000000000000f00000000000
+                                                            )
+                                                        )
+                                                    )
+                                                )
                                             )
                                         )
                                     )
@@ -117,7 +138,19 @@ contract BoolBin {
                                             0xf000000000000000000000000000000000000000000000000000000000f00000,
                                             xor(
                                                 0xf00000000000000000000000000000000000000000000000000000000f000000,
-                                                0xf0000000000000000000000000000000000000000000000000000000f0000000
+                                                xor(
+                                                    0xf0000000000000000000000000000000000000000000000000000000f0000000,
+                                                    xor(
+                                                        0xf000000000000000000000000000000000000000000000000000000f00000000,
+                                                        xor(
+                                                            0xf00000000000000000000000000000000000000000000000000000f000000000,
+                                                            xor(
+                                                                0xf0000000000000000000000000000000000000000000000000000f0000000000,
+                                                                0xf000000000000000000000000000000000000000000000000000f00000000000
+                                                            )
+                                                        )
+                                                    )
+                                                )
                                             )
                                         )
                                     )
@@ -130,10 +163,25 @@ contract BoolBin {
         }
     }
 
+    function addColoursAssemblyStructSingle(address user, bytes32 colour) public {
+        UserDataBin storage userData = userDataOfUserBin[user];
+
+        assembly {
+            sstore(userData.slot, or(userData.offset, colour))
+        }
+    }
+
+    function removeColoursAssemblyStructSingle(address user, bytes32 colour) public {
+        UserDataBin storage userData = userDataOfUserBin[user];
+        bytes32 _state = userDataOfUserBin[user].state;
+
+        assembly {
+            sstore(userData.slot, xor(_state, colour))
+        }
+    }
+
     function addColoursAssemblyStruct(address user) public {
         UserDataBin storage userData = userDataOfUserBin[user];
-        bytes32 _state = userData.state;
-
         assembly {
             sstore(
                 userData.slot,
@@ -153,7 +201,19 @@ contract BoolBin {
                                             0xf000000000000000000000000000000000000000000000000000000000f00000,
                                             or(
                                                 0xf00000000000000000000000000000000000000000000000000000000f000000,
-                                                0xf0000000000000000000000000000000000000000000000000000000f0000000
+                                                or(
+                                                    0xf0000000000000000000000000000000000000000000000000000000f0000000,
+                                                    or(
+                                                        0xf000000000000000000000000000000000000000000000000000000f00000000,
+                                                        or(
+                                                            0xf00000000000000000000000000000000000000000000000000000f000000000,
+                                                            or(
+                                                                0xf0000000000000000000000000000000000000000000000000000f0000000000,
+                                                                0xf000000000000000000000000000000000000000000000000000f00000000000
+                                                            )
+                                                        )
+                                                    )
+                                                )
                                             )
                                         )
                                     )
@@ -166,18 +226,9 @@ contract BoolBin {
         }
     }
 
-    function addColoursAssemblyStructSingle(address user, bytes32 colour) public {
-        UserDataBin storage userData = userDataOfUserBin[user];
-        bytes32 _state = userData.state;
-
-        assembly {
-            sstore(userData.slot, or(userData.offset, colour))
-        }
-    }
-
     function removeColoursAssemblyStruct(address user) public {
         UserDataBin storage userData = userDataOfUserBin[user];
-        bytes32 _state = userData.state;
+        bytes32 _state = userDataOfUserBin[user].state;
 
         assembly {
             sstore(
@@ -198,7 +249,19 @@ contract BoolBin {
                                             0xf000000000000000000000000000000000000000000000000000000000f00000,
                                             xor(
                                                 0xf00000000000000000000000000000000000000000000000000000000f000000,
-                                                0xf0000000000000000000000000000000000000000000000000000000f0000000
+                                                xor(
+                                                    0xf0000000000000000000000000000000000000000000000000000000f0000000,
+                                                    xor(
+                                                        0xf000000000000000000000000000000000000000000000000000000f00000000,
+                                                        xor(
+                                                            0xf00000000000000000000000000000000000000000000000000000f000000000,
+                                                            xor(
+                                                                0xf0000000000000000000000000000000000000000000000000000f0000000000,
+                                                                0xf000000000000000000000000000000000000000000000000000f00000000000
+                                                            )
+                                                        )
+                                                    )
+                                                )
                                             )
                                         )
                                     )
@@ -221,6 +284,10 @@ contract BoolBin {
         userData.white = state;
         userData.purple = state;
         userData.pink = state;
+        userData.gold = state;
+        userData.silver = state;
+        userData.bronze = state;
+        userData.peach = state;
     }
 
     function addColoursStructBoolAddOne(address user, bool state) public {
@@ -228,30 +295,71 @@ contract BoolBin {
         userData.red = state;
     }
 
-    function useBytesToCheckState(address user) public returns (bool) {
-        // Gas 6947 true / 947 false
-        UserDataBin memory userData = userDataOfUserBin[user];
-        bytes32 _state = userData.state;
+    function useBoolsToCheckState(address user) public returns (bool) {
+        // Gas 2193 true / 943 false
+        UserDataStruct storage userData = userDataStruct[user];
+        return  userData.red &&
+                userData.blue &&
+                userData.green &&
+                userData.orange &&
+                userData.black &&
+                userData.white &&
+                userData.purple &&
+                userData.pink &&
+                userData.gold &&
+                userData.silver &&
+                userData.bronze &&
+                userData.peach;
+    }
 
+    function useBytesToCheckState(address user) public returns (bool) {
+        // Gas 6927 true / 927 false
         // 0xf000000000000000000000000000000000000000000000000000000000000fff
         bytes32 expected = red ^ green ^ blue;
-        return expected & _state == expected;
+        return expected & userDataOfUserBin[user].state == expected;
     }
 
     function useBytesToCheckStateAssembly(address user) public returns (bool matched) {
-        // Gas 635 everytime
-        UserDataBin memory userData = userDataOfUserBin[user];
-        bytes32 _state = userData.state;
+        // Gas 666 everytime
+        bytes32 _state = userDataOfUserBin[user].state;
 
         assembly {
             let expected :=
                 xor(
-                    red.slot, // red
+                    _state,
                     xor(
-                        green.slot, // green
-                        0 // blue
+                        0xf00000000000000000000000000000000000000000000000000000000000000f,
+                        xor(
+                            0xf0000000000000000000000000000000000000000000000000000000000000f0,
+                            xor(
+                                0xf000000000000000000000000000000000000000000000000000000000000f00,
+                                xor(
+                                    0xf00000000000000000000000000000000000000000000000000000000000f000,
+                                    xor(
+                                        0xf0000000000000000000000000000000000000000000000000000000000f0000,
+                                        xor(
+                                            0xf000000000000000000000000000000000000000000000000000000000f00000,
+                                            xor(
+                                                0xf00000000000000000000000000000000000000000000000000000000f000000,
+                                                xor(
+                                                    0xf000000000000000000000000000000000000000000000000000000f00000000,
+                                                    xor(
+                                                        0xf00000000000000000000000000000000000000000000000000000f000000000,
+                                                        xor(
+                                                            0xf0000000000000000000000000000000000000000000000000000f0000000000,
+                                                            0xf000000000000000000000000000000000000000000000000000f00000000000
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )
                     )
                 )
+
             matched := eq(and(expected, _state), expected)
         }
     }
