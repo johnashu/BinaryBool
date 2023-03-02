@@ -21,34 +21,34 @@ contract BoolBinTest is Test {
     bytes32 silver= 0xf00000000000000000000000000000000000000000000000000000f000000000;
     bytes32 peach = 0xf0000000000000000000000000000000000000000000000000000f0000000000;
     bytes32 bronze= 0xf000000000000000000000000000000000000000000000000000f00000000000;
-    
+
     function setUp() public {
         boolBin = new BoolBin();
     }
 
-    // function testAddColoursAssemblyState() public {
-    //     boolBin.userDataOfUserMap(user);
-    //     boolBin.addColoursMapState(user);
-    //     boolBin.userDataOfUserMap(user);
-    //     boolBin.removeColoursMapState(user);
-    //     boolBin.userDataOfUserMap(user);
-    //     boolBin.addColoursMapState(user);
-    //     boolBin.userDataOfUserMap(user);
-    //     boolBin.removeColoursMapState(user);
-    //     boolBin.userDataOfUserMap(user);
-    // }
+    function testAddColoursAssemblyState() public {
+        boolBin.userDataOfUserMap(user);
+        boolBin.addColoursMapState(user);
+        boolBin.userDataOfUserMap(user);
+        boolBin.removeColoursMapState(user);
+        boolBin.userDataOfUserMap(user);
+        boolBin.addColoursMapState(user);
+        boolBin.userDataOfUserMap(user);
+        boolBin.removeColoursMapState(user);
+        boolBin.userDataOfUserMap(user);
+    }
 
-    // function testAddColoursMapAssembly() public {
-    //     boolBin.userDataOfUserMap(user);
-    //     boolBin.addColoursAssemblyMapping(user);
-    //     boolBin.userDataOfUserMap(user);
-    //     boolBin.removeColoursAssemblyMapping(user);
-    //     boolBin.userDataOfUserMap(user);
-    //     boolBin.addColoursAssemblyMapping(user);
-    //     boolBin.userDataOfUserMap(user);
-    //     boolBin.removeColoursAssemblyMapping(user);
-    //     boolBin.userDataOfUserMap(user);
-    // }
+    function testAddColoursMapAssembly() public {
+        boolBin.userDataOfUserMap(user);
+        boolBin.addColoursAssemblyMapping(user);
+        boolBin.userDataOfUserMap(user);
+        boolBin.removeColoursAssemblyMapping(user);
+        boolBin.userDataOfUserMap(user);
+        boolBin.addColoursAssemblyMapping(user);
+        boolBin.userDataOfUserMap(user);
+        boolBin.removeColoursAssemblyMapping(user);
+        boolBin.userDataOfUserMap(user);
+    }
 
     function testAddColoursStructBool() public {
         boolBin.userDataStruct(user);
