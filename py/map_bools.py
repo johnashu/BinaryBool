@@ -10,7 +10,6 @@ from base import (
 state = base
 grid = [state, state, state, state, state, state, state, state, state, state]
 
-
 def display_grid(grid: list):
     for x in grid:
         print(hex(x))
@@ -37,7 +36,9 @@ def add_to_zone(grid: list, row: int, zone: int, pos: int):
     ratio = 10  # (per zone)
     if pos > 10:
         return False
-    grid[row] = add_flag_to_position(grid[row], pos + (zone * ratio))
+    bit_pos = pos + (zone * ratio)
+    print (bit_pos)
+    grid[row] = add_flag_to_position(grid[row], bit_pos)
     return grid
 
 
@@ -79,22 +80,25 @@ def matrixify_bytes_grid_zones(grid: list) -> list:
     return new_grid
 
 
-for i in range(10):
-    grid = add_to_grid(grid, i + 1, i)
-    grid = add_to_grid(grid, i * 2, i)
+# for i in range(10):
+#     grid = add_to_grid(grid, i + 1, i)
+#     grid = add_to_grid(grid, i * 2, i)
 
 
-display_grid(grid)
+# display_grid(grid)
 
-matrix_arr = matrixify_bytes_grid(grid)
-for i, a in enumerate(matrix_arr):
-    print(i, a)
+# matrix_arr = matrixify_bytes_grid(grid)
+# for i, a in enumerate(matrix_arr):
+#     print(i, a)
 
 grid = add_to_zone(grid, 0, 2, 4)
-grid = add_to_zone(grid, 0, 0, 1)
-grid = add_to_all_zones(grid, 0, 1)
-grid = add_to_all_zones(grid, 0, 3)
-grid = add_to_all_zones(grid, 0, 5)
+grid = add_to_zone(grid, 0, 0, 2)
+
+for i in range(10):
+    
+    grid = add_to_all_zones(grid, i, 1)
+    grid = add_to_all_zones(grid, i, 3)
+    grid = add_to_all_zones(grid, i, 5)
 
 display_grid(grid)
 

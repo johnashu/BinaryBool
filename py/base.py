@@ -46,7 +46,6 @@ def remove_flag_to_position(state: int, pos: int) -> int:
         return state
     bit_pos = 4 * pos
     shifted = base >> bit_pos
-
     return state ^ shifted
 
 
