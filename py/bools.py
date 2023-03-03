@@ -1,4 +1,11 @@
-from base import base, full, add_flag_to_position, remove_flag_to_position, _exists, check_num_flags
+from base import (
+    base,
+    full,
+    add_flag_to_position,
+    remove_flag_to_position,
+    _exists,
+    check_num_flags,
+)
 
 status = base
 
