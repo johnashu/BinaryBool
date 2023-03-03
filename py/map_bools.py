@@ -93,14 +93,16 @@ grid = add_to_zone(grid, 0, 0, 1)
 grid = add_to_all_zones(grid, 0, 1)
 grid = add_to_all_zones(grid, 0, 3)
 grid = add_to_all_zones(grid, 0, 5)
+
 display_grid(grid)
+
 matrix_arr = matrixify_bytes_grid_zones(grid)
 for i, a in enumerate(matrix_arr):
     print(i, a)
 
-# for i in range(10):
-#     grid = remove_from_grid(grid, i+4, i)
+for i in range(10):
+    grid = remove_from_grid(grid, i+4, i)
 
-# grid = add_to_grid(grid, 3, 2)
+grid = add_to_grid(grid, 3, 2)
 
-# display_grid(grid)
+display_grid(grid)
