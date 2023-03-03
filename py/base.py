@@ -1,23 +1,26 @@
 base = 0xF000000000000000000000000000000000000000000000000000000000000000
 full = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 
+
 def bytes_to_array(state: int) -> list:
     rtn = []
     splitted = str(hex(state))
     for b in splitted[2:]:
-        rtn.append(1 if b.upper() == 'F' else 0)
+        rtn.append(1 if b.upper() == "F" else 0)
     return rtn
+
 
 def bytes_to_arrays(state: int, _split: int) -> list:
     rtn = []
     splitted = str(hex(state))
     zone = []
-    for i, b in enumerate(splitted[3:]):        
+    for i, b in enumerate(splitted[3:]):
         if i % _split == 0:
             rtn.append(zone)
-            zone = []      
-        zone.append(1 if b.upper() == 'F' else 0)
+            zone = []
+        zone.append(1 if b.upper() == "F" else 0)
     return rtn
+
 
 def _exists(state: int, pos: int) -> bool:
     bit_pos = pos * 4
