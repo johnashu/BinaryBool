@@ -11,13 +11,10 @@ contract LotteryTest is Test {
     bytes32 losingNumbers = 0xF000F0F0000000000FF0000000000000000000000000F000000000000000000F;
     bytes32 winningNumbers = 0xFF00F0F00000000000000000000000000F0000000000F000000000000000000F;
 
-
     function setUp() public {
         lottery = new Lottery();
-        
     }
 
- 
     function testLottery() public {
         lottery.addWinningNumbers();
         bytes32 nums = lottery.winningNumbers();
@@ -27,7 +24,5 @@ contract LotteryTest is Test {
         lottery.playerNumbers(winner);
         lottery.checkWinner(winner, nums);
         lottery.checkWinner(loser, nums);
-    
-        
     }
 }
