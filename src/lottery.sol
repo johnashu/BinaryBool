@@ -18,15 +18,35 @@ contract Lottery {
     bytes32 public winningNumbers = 0xF000000000000000000000000000000000000000000000000000000000000000;
     uint256[] public _winningNumbers = [1, 4, 6, 33, 44, 63];
 
-    /// @dev adds a bytes string of number locations
+    /// @dev adds a bytes string of number locations.
+    /// Iterates over positions 1-63 to check that 6 positions exist.
     /// @param numbersBytes bytes with selected number position as 'F'
     /// Example - 0xFF00F0F00000000000000000000000000F0000000000F000000000000000000F
     function addPlayerNumbers(address player, bytes32 numbersBytes) public {
-        // Hash Key (player) and slot (2)
+        // Hash Key (player) and slot (0)
         bytes32 location = keccak256(abi.encode(player, 0x0));
-        
+
         assembly {
-            sstore(location, numbersBytes)
+            // Base mask
+            let _base := 0xF000000000000000000000000000000000000000000000000000000000000000
+
+            let counter := 0
+            for { let i := 1 } lt(i, 64) { i := add(i, 1) } {
+      
+                // Shift the 'on' bit (F) to the correct position
+                let shifted := shr(mul(i, 4), _base)
+
+                // AND to create a new state
+                let anded := and(numbersBytes, shifted)
+
+                // check if equal.
+                if eq(anded, shifted) { counter := add(counter, 1) } // increment counter by 1}
+            }
+
+            if eq(6, counter) {
+                // Store to mapping
+                sstore(location, numbersBytes)
+            }
         }
     }
 
@@ -50,7 +70,6 @@ contract Lottery {
             let length := mload(arr)
 
             for { let i := 0 } lt(i, length) { i := add(i, 1) } {
-
                 // Load current state
                 let state := sload(winningNumbers.slot)
 
@@ -73,7 +92,6 @@ contract Lottery {
         }
     }
 
-
     function checkWinner(address player, bytes32 winningNums) public returns (bool result) {
         bytes32 _playerNumbers = keccak256(abi.encode(player, 0x0)); //slot 0
 
@@ -85,7 +103,9 @@ contract Lottery {
 
     function _exists(bytes32 state, uint8 pos) public returns (bool newState) {
         assembly {
-            let shifted := shr(0xF000000000000000000000000000000000000000000000000000000000000000, mul(pos, 4))
+            // Base mask
+            let _base := 0xF000000000000000000000000000000000000000000000000000000000000000
+            let shifted := shr(_base, mul(pos, 4))
             let anded := and(state, shifted)
             newState := eq(anded, shifted)
         }
