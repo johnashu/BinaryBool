@@ -21,7 +21,7 @@ contract TestAddRemoveFlags is Test {
 
         addRemoveFlags.userFlags(user);
 
-        bytes32 removed = addRemoveFlags.removeFlagToPosition(user, 1);
+        bytes32 removed = addRemoveFlags.removeFlagFromPosition(user, 1);
         assertEq(removed, removedCheck);
         
     }

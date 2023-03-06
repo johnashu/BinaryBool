@@ -53,7 +53,7 @@ contract AddRemoveFlags {
     /// @param user address of the user to update their state.
     /// @param pos position in the bytes32 word to place the flag.
     /// @return state users updated state as a bytes32 word
-    function removeFlagToPosition(address user, uint8 pos) public returns (bytes32 state) {
+    function removeFlagFromPosition(address user, uint8 pos) public returns (bytes32 state) {
         // Hash Key (user) and slot (0)
         bytes32 location = keccak256(abi.encode(user, 0x0));
         assembly {
