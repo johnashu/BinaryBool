@@ -1,4 +1,7 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
+
+// Maffaz 2023 
+
 pragma solidity 0.8.18;
 
 contract BoolBin {
