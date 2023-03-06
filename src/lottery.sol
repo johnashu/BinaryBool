@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity 0.8.18;
 
+// Maffaz 2023 
+
 contract Lottery {
     // Slot 0
     mapping(address player => bytes32 numbers) public playerNumbers;
@@ -16,11 +18,11 @@ contract Lottery {
     bytes32 public winningNumbers =
         0xF000000000000000000000000000000000000000000000000000000000000000;
 
-    // Mock numbers to demo.
+    // Mock numbers to demo.  
     uint256[] public _winningNumbers = [1, 4, 6, 33, 44, 63];
 
     /// @dev PlaceHolder to add an array of numbers to bytes32 map.
-    /// Should come from a trusted VRF
+    /// Should come from a trusted VRF source such as onChain or chainlink (Oracle)
     function addWinningNumbers() public {
         _addNumbersToBytes(_winningNumbers);
     }
