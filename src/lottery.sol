@@ -5,8 +5,8 @@ contract Lottery {
     // Slot 0
     mapping(address player => bytes32 numbers) public playerNumbers;
 
-    // F at 0 position is there to stop the state from resetting to zero. If this happens, it will cost 21k+Gas to reinit to a positive integer.
-
+    // The F at 0 position is there to stop the state from resetting to zero. 
+    // If this happens, it will cost 21k+Gas to reinit to a positive integer.
     // numbers start from 1 and go to 63..
     /*
                      0123456789...                                               ...63*/
@@ -15,6 +15,8 @@ contract Lottery {
     //slot 2 - 0xFF00F0F00000000000000000000000000F0000000000F000000000000000000F
     bytes32 public winningNumbers =
         0xF000000000000000000000000000000000000000000000000000000000000000;
+
+    // Mock numbers to demo.
     uint256[] public _winningNumbers = [1, 4, 6, 33, 44, 63];
 
     /// @dev PlaceHolder to add an array of numbers to bytes32 map.
@@ -23,7 +25,7 @@ contract Lottery {
         _addNumbersToBytes(_winningNumbers);
     }
 
-    /// @dev PlaceHolder to add an array of numbers to bytes32 map.
+    /// @dev Reset numbers to 0.
     /// Should come from a trusted VRF
     function resetWinningNumbers() public {
         winningNumbers = base;
@@ -56,7 +58,7 @@ contract Lottery {
                 } // increment counter by 1}
 
                 if eq(6, counter) {
-                    // Store to mapping
+                    // We hit 6? -> store to mapping
                     sstore(location, numbersBytes)
                     break
                 }
@@ -65,8 +67,10 @@ contract Lottery {
     }
 
     function _addNumbersToBytes(uint256[] memory arr) public {
+        // the short version...
         // bytes32 shifted = base >> pos * 4;
         // return state ^ shifted;
+
         assembly {
             // where array is stored in memory (0x80)
             let location := arr
