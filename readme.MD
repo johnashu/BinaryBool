@@ -8,7 +8,7 @@ Notes and methods in Python for quick and dirty play.
 
 `./BinaryBools.sol`
 
-A verbose look at masking without using shifts.  This is the most efficient on gas if masks can be predetermined and hardcoded.
+A verbose scratchpace looking at masking without using shifts.  This is the most efficient on gas if masks can be predetermined and hardcoded.
 
 `./lottery.sol`
 

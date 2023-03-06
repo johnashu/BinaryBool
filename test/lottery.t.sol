@@ -24,8 +24,9 @@ contract LotteryTest is Test {
         lottery.playerNumbers(loser);
         lottery.addPlayerNumbers(winner, winningNumbers);
         lottery.playerNumbers(winner);
-        lottery.checkWinner(winner, nums);
-        lottery.checkWinner(loser, nums);
+        lottery.checkWinner(winner);
+        assertEq(lottery.playerNumbers(winner), nums);
+        lottery.checkWinner(loser);
     }
 
 
