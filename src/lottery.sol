@@ -10,13 +10,24 @@ contract Lottery {
     // numbers start from 1 and go to 63..
     /*
                      0123456789...                                               ...63*/
-    bytes32 base = 0xF000000000000000000000000000000000000000000000000000000000000000;
-    bytes32 full = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
+    bytes32 base = 0xF000000000000000000000000000000000000000000000000000000000000000; // slot 1
 
-    //slot 3
-    // 0xFF00F0F00000000000000000000000000F0000000000F000000000000000000F
-    bytes32 public winningNumbers = 0xF000000000000000000000000000000000000000000000000000000000000000;
+    //slot 2 - 0xFF00F0F00000000000000000000000000F0000000000F000000000000000000F
+    bytes32 public winningNumbers =
+        0xF000000000000000000000000000000000000000000000000000000000000000;
     uint256[] public _winningNumbers = [1, 4, 6, 33, 44, 63];
+
+    /// @dev PlaceHolder to add an array of numbers to bytes32 map.
+    /// Should come from a trusted VRF
+    function addWinningNumbers() public {
+        _addNumbersToBytes(_winningNumbers);
+    }
+
+    /// @dev PlaceHolder to add an array of numbers to bytes32 map.
+    /// Should come from a trusted VRF
+    function resetWinningNumbers() public {
+        winningNumbers = base;
+    }
 
     /// @dev adds a bytes string of number locations.
     /// Iterates over positions 1-63 to check that 6 positions exist.
@@ -27,49 +38,47 @@ contract Lottery {
         bytes32 location = keccak256(abi.encode(player, 0x0));
 
         assembly {
-            // Base mask
-            let _base := 0xF000000000000000000000000000000000000000000000000000000000000000
-
             let counter := 0
-            for { let i := 1 } lt(i, 64) { i := add(i, 1) } {
-      
+            for {
+                let i := 1
+            } lt(i, 64) {
+                i := add(i, 1)
+            } {
                 // Shift the 'on' bit (F) to the correct position
-                let shifted := shr(mul(i, 4), _base)
+                let shifted := shr(mul(i, 4), sload(base.slot))
 
                 // AND to create a new state
                 let anded := and(numbersBytes, shifted)
 
                 // check if equal.
-                if eq(anded, shifted) { counter := add(counter, 1) } // increment counter by 1}
-            }
+                if eq(anded, shifted) {
+                    counter := add(counter, 1)
+                } // increment counter by 1}
 
-            if eq(6, counter) {
-                // Store to mapping
-                sstore(location, numbersBytes)
+                if eq(6, counter) {
+                    // Store to mapping
+                    sstore(location, numbersBytes)
+                    break
+                }
             }
         }
-    }
-
-    /// @dev PlaceHolder to add an array of numbers to bytes32 map.
-    /// Should come from a trusted VRF
-    function addWinningNumbers() public {
-        _addNumbersToBytes(_winningNumbers);
     }
 
     function _addNumbersToBytes(uint256[] memory arr) public {
         // bytes32 shifted = base >> pos * 4;
         // return state ^ shifted;
         assembly {
-            // Base mask
-            let _base := 0xF000000000000000000000000000000000000000000000000000000000000000
-
             // where array is stored in memory (0x80)
             let location := arr
 
             // length of array
             let length := mload(arr)
 
-            for { let i := 0 } lt(i, length) { i := add(i, 1) } {
+            for {
+                let i := 0
+            } lt(i, length) {
+                i := add(i, 1)
+            } {
                 // Load current state
                 let state := sload(winningNumbers.slot)
 
@@ -81,7 +90,7 @@ contract Lottery {
                 let bit_pos := mul(item, 4)
 
                 // Shift the 'on' bit (F) to the correct position
-                let shifted := shr(bit_pos, _base)
+                let shifted := shr(bit_pos, sload(base.slot))
 
                 // XOR to create a new state
                 let xored := xor(state, shifted)
@@ -92,22 +101,11 @@ contract Lottery {
         }
     }
 
-    function checkWinner(address player, bytes32 winningNums) public returns (bool result) {
+    function checkWinner(address player) public returns (bool result) {
         bytes32 _playerNumbers = keccak256(abi.encode(player, 0x0)); //slot 0
-
         assembly {
             let state := sload(_playerNumbers)
-            result := eq(and(winningNums, state), state)
-        }
-    }
-
-    function _exists(bytes32 state, uint8 pos) public returns (bool newState) {
-        assembly {
-            // Base mask
-            let _base := 0xF000000000000000000000000000000000000000000000000000000000000000
-            let shifted := shr(_base, mul(pos, 4))
-            let anded := and(state, shifted)
-            newState := eq(anded, shifted)
+            result := eq(and(sload(winningNumbers.slot), state), state)
         }
     }
 }
