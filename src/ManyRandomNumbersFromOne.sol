@@ -30,12 +30,13 @@ contract ManyRandomNumbersFromOne {
         uint256 randomNumber = uint256(
             keccak256(abi.encodePacked(block.timestamp * block.number, msg.sender, block.timestamp + block.number))
         );
-        // Check here that the amount does not exceed the
+        // Check here that the amount does not exceed 64
         if (plays > 64 || plays == 0) revert TooManyOrZeroplays();
 
         assembly {
-            let winningNumber := 2 // We will do a simple random toss here with 2 outcomes [1] lose [2] win but any number can be used
+            let winningNumber := 2 // We will do a simple random toss here with 2 outcomes [1] lose [2] win but any number can be used.
             for { let i := 0 } lt(i, plays) { i := add(i, 1) } {
+
                 // Shift the 'on' bit (F) to the correct position
                 let shifted := shr(mul(i, 4), randomNumber)
 
