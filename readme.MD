@@ -18,7 +18,7 @@ An example of using 32 byte words to create lottery tickets and determine the ou
 
 Example of using a 32 byte word as an array of boolean flags. - * Will be used in the future 'GridMap' *
 
-`./src/ManyNumbersFromOne`
+`./src/ManyRandomNumbersFromOne`
 
 Given a number of plays passed, we take 1 full 32 byte random word and use bitshifting to make our number smaller and analyse the result.  
 Winning plays are added to a total and the amount is returned.

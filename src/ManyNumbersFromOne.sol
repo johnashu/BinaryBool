@@ -4,14 +4,23 @@
 
 pragma solidity 0.8.18;
 
-contract ManyNumbersFromOne {
+
+// | src/ManyRandomNumbersFromOne.sol:ManyRandomNumbersFromOne contract |                 |     |        |     |         |
+// |--------------------------------------------------------|-----------------|-----|--------|-----|---------|
+// | Deployment Cost                                        | Deployment Size |     |        |     |         |
+// | 86535                                                  | 464             |     |        |     |         |
+// | Function Name                                          | min             | avg | median | max | # calls |
+// | manyCoinPlays                                          | 677             | 758 | 758    | 840 | 2       |
+
+contract ManyRandomNumbersFromOne {
     error TooManyOrZeroplays();
-    /// @dev iterates over a 32 byte word using the 'plays' passed and returns the number of winning outcomes from that iteration.
+    /// @dev iterates over 1 x 32 byte word using the 'plays' passed and returns the number of winning outcomes from that iteration.
     /// @param plays number of plays (up to 64 we can execute with looking at numbers 1-16 (result + 1)
-    ///              We need to half that for each hex added - 0x10 - 0xff = max 32 ... )
+    ///              We need to half that for each hex added - 0x10 - 0xff = max 32 (numbers 1-256) ... )
     /// @return numberWins number of times this user has won.
 
     function manyCoinPlays(uint256 plays) public returns (uint256 numberWins) {
+        // Mock value but should be a 32 byte VRF from a trusted source on chain or oracle.  
         uint256 randomNumber = uint256(
             keccak256(abi.encodePacked(block.timestamp * block.number, msg.sender, block.timestamp + block.number))
         );
