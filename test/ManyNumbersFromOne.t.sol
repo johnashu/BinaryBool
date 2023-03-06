@@ -6,21 +6,21 @@ import "../src/ManyNumbersFromOne.sol";
 
 contract TestManyNumbersFromOne is Test {
     ManyNumbersFromOne public manyNumbersFromOne;
-    address user = makeAddr("DoFlips");
+    address user = makeAddr("Doplays");
 
     function setUp() public {
         manyNumbersFromOne = new ManyNumbersFromOne();
     }
 
-    function testManyCoinFlips(uint256 x) public {
+    function testmanyCoinPlays(uint256 x) public {
         vm.assume(x < 64 && x > 0);
         vm.roll(x + 1);
-        uint256 flipped = manyNumbersFromOne.manyCoinFlips(x);
+        uint256 flipped = manyNumbersFromOne.manyCoinPlays(x);
         emit log_uint(flipped);
     }
 
-    function testFailManyCoinFlips(uint256 x) public {
+    function testFailmanyCoinPlays(uint256 x) public {
         vm.assume(x > 64);
-        manyNumbersFromOne.manyCoinFlips(x);
+        manyNumbersFromOne.manyCoinPlays(x);
     }
 }

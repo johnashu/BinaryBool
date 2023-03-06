@@ -114,5 +114,5 @@ grid = add_to_grid(grid, 3, 2)
 display_grid(grid)
 
 
-for i in range(257):
+for i in range(256):
     print(hex(i))
