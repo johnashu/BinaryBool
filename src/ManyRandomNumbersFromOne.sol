@@ -4,7 +4,6 @@
 
 pragma solidity 0.8.18;
 
-
 // stats from Remix, if we only wanted 1 play, there are further gas savings we can use..
 // Remix Merge VM - 2 plays - winner
 // | Function Name           | Execution Cost  |
@@ -16,7 +15,7 @@ pragma solidity 0.8.18;
 // | manyRandomPlays         | 6688            |
 // | manyRandomPlaysNormal   | 31111           |
 
-//  forge test for 1 play fuzzed 10k
+//  forge test for 2 plays fuzzed 10k
 // | src/ManyRandomNumbersFromOne.sol:ManyRandomNumbersFromOne    |                 |      |        |      |         |
 // |--------------------------------------------------------------|-----------------|------|--------|------|---------|
 // | Function Name                                                | min             | avg  | median | max  | # calls |
@@ -31,6 +30,20 @@ pragma solidity 0.8.18;
 // | manyRandomPlaysNormal                                        | 30017           | 30017 | 30017  | 30017 | 1       |
 
 contract ManyRandomNumbersFromOne {
+    // 10 x random numbers
+    uint256[] randomNumbers = [
+        73333815688330388439497394924671604269744030172485877353949151816386893917160,
+        85814117620024886351643586925306305793986829502849246187571115955535393006148,
+        36802378796396435871236243745166043890514035372622482651201897269056552259859,
+        57815848698117406146785619784203885242380412714729361756098787701447194791543,
+        35472372102571918137797439836461407518459484572253705279570477773539258823912,
+        45832870153302503687099664337066908955617947126051693520562955816157222070710,
+        36802378796396435871236243745166043890514035372622482651201897269056552259859,
+        57815848698117406146785619784203885242380412714729361756098787701447194791543,
+        35472372102571918137797439836461407518459484572253705279570477773539258823912,
+        45832870153302503687099664337066908955617947126051693520562955816157222070710
+    ];
+    
     error TooManyOrZeroplays();
 
     /// @dev iterates over 1 x 32 byte word using the 'plays' passed and returns the number of winning outcomes from that iteration.
@@ -90,11 +103,33 @@ contract ManyRandomNumbersFromOne {
         // we have to start from 1 as we cannot divide by zero.
         // We have to 'pop' off the last digit one at a time using division.
         for (uint256 i = 1; i < plays + 1; ++i) {
-            uint toCheck = randomNumber / maxDiv;
+            uint256 toCheck = randomNumber / maxDiv;
             if (toCheck % winningOdds == 0) {
                 ++numberWins;
             }
             maxDiv *= 10;
+        }
+    }
+
+    /// @dev Normal solidity implementation of a play
+    /// @param plays number of plays
+    /// @return numberWins Whether the player wins or loses the play..
+    function manyRandomPlaysNormalArray(uint256 plays)
+        public
+        view
+        returns (uint256 numberWins)
+    {
+        // Mock values but should be a 32 byte VRF from a trusted source on chain or oracle.
+        uint256[] memory _randomNumbers = _getRandomNumbers();
+
+        // We will do a simple random toss here with 2 outcomes [1] lose [2] win but any number can be used.
+        uint8 winningOdds = 2;
+
+        // iterate and check
+        for (uint256 i; i < plays; ++i) {
+            if (_randomNumbers[i] % winningOdds == 0) {
+                ++numberWins;
+            }
         }
     }
 
@@ -110,5 +145,11 @@ contract ManyRandomNumbersFromOne {
                     )
                 )
             );
+    }
+
+    function _getRandomNumbers() private view returns (uint256[] memory) {
+        // Mock value but should be a 32 byte VRF from a trusted source on chain or oracle.
+        uint256[] memory _randomNumbers = randomNumbers;
+        return _randomNumbers;
     }
 }
