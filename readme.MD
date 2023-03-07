@@ -3,7 +3,6 @@
 A Solidity based look at using bitmasking to use 32 byte words as efficient arrays.
 
 
-
 * Notes and methods in Python for quick and dirty play.
 
  `./py`
@@ -25,7 +24,6 @@ A Solidity based look at using bitmasking to use 32 byte words as efficient arra
 
 * Given a number of plays passed, we take 1 full 32 byte random word and use bitshifting to make our number smaller and analyse the result.  
 Winning plays are added to a total and the amount is returned.
-
 
 `./src/ManyRandomNumbersFromOne`
 
