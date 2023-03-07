@@ -4,10 +4,12 @@
 
 pragma solidity 0.8.18;
 
-// Remix Merge VM - 1 play - winner
+
+// stats from Remix, if we only wanted 1 play, there are further gas savings we can use..
+// Remix Merge VM - 2 plays - winner
 // | Function Name           | Execution Cost  |
-// | manyRandomPlays         | 777            |
-// | manyRandomPlaysNormal   | 1279            |
+// | manyRandomPlays         | 879            |
+// | manyRandomPlaysNormal   | 1778            |
 
 // Remix Merge VM - 64 plays (~50% win)
 // | Function Name           | Execution Cost  |
@@ -19,7 +21,7 @@ pragma solidity 0.8.18;
 // |--------------------------------------------------------------|-----------------|------|--------|------|---------|
 // | Function Name                                                | min             | avg  | median | max  | # calls |
 // | manyRandomPlays                                              | 826             | 826  | 826    | 826  | 1       |
-// | manyRandomPlaysNormal                                        | 1295            | 1295 | 1295   | 1295 | 1       |
+// | manyRandomPlaysNormal                                        | 1795            | 1795 | 1795   | 1795 | 1       |
 
 //  forge test for 64 plays fuzzed 10k
 // | src/ManyRandomNumbersFromOne.sol:ManyRandomNumbersFromOne    |                 |       |        |       |         |
