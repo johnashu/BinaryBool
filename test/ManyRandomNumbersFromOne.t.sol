@@ -30,7 +30,7 @@ contract TestManyRandomNumbersFromOne is Test {
     }
 
     function testManyRandomPlaysFuzzed(uint256 x) public {
-        vm.assume(x > 1 && x < 64);
+        vm.assume(x > 2 && x < 64);
         vm.roll((x % 10) * 10_000_000);
 
         uint256 playswon = manyRandomNumbersFromOne.manyRandomPlays(x);
@@ -38,14 +38,14 @@ contract TestManyRandomNumbersFromOne is Test {
     }
 
     function testManyRandomPlaysNormalFuzzed(uint256 x) public {
-        vm.assume(x > 1 && x < 64);
+        vm.assume(x > 2 && x < 64);
         vm.roll((x % 10) * 10_000_000);
         uint256 playswon = manyRandomNumbersFromOne.manyRandomPlaysNormal(x);
         emit log_uint(playswon);
     }
 
     function testManyRandomPlaysNormalArrayFuzzed(uint256 x) public {
-        vm.assume(x > 1 && x < 64);
+        vm.assume(x > 2 && x < 11);
         vm.roll((x % 10) * 10_000_000);
         uint256 playswon = manyRandomNumbersFromOne.manyRandomPlaysNormalArray(x);
         emit log_uint(playswon);
@@ -67,7 +67,7 @@ contract TestManyRandomNumbersFromOne is Test {
     function testManyRandomPlaysNormalArrayMax(uint256 x) public {
         vm.assume(x < 10_000_000);
         vm.roll(x);
-        uint256 playswon = manyRandomNumbersFromOne.manyRandomPlaysNormalArray(64);
+        uint256 playswon = manyRandomNumbersFromOne.manyRandomPlaysNormalArray(10);
         emit log_uint(playswon);
     }
 

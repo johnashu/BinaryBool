@@ -7,6 +7,7 @@ for i in winningNumbers:
     status = add_flag_to_position(status, i)
     # status = add_flag_to_position(status, i) # 2 x to check that it does the _exists check..
 
+
 print(hex(status))
 check = 0xFF00F0F00000000000000000000000000F0000000000F000000000000000000F
 c = check_num_flags(check, 6, status)
@@ -31,7 +32,7 @@ def duplicates(winningNumbers: list) -> bool:
 winningNumbers = []
 lastNum = 0
 for i in range(0, 32):
-    shifted = (randomNumber >> i * 16) ^ randomNumber
+    shifted = (randomNumber >> i * 8) ^ randomNumber
     res = (shifted % 40) + 1
     if res != lastNum: 
         if len(winningNumbers) < 6:
@@ -58,10 +59,27 @@ print(hex(anded))
 print(shr)
 print(xor)
 
-print(hex(0xFF00F0F00000000000000000000000000F0000000000F0000000000000000001 & 0xFF00F0F00000000000000000000000000F0000000000F0000000000000000001))
+print(hex(0xFF00F0F00000000000000000000000000F0000000000F000000000000000000F & 0xFF00F0F00000000000000000000000000F0000000000F00000000000000000ff))
 
 
 
+randomnumber = 0x679ed1402f705180e06e33a7aeb4a6fc94d5914ed79c6e62f9f17fc78b998a75281
+
+randomnumber >> 2
+print(hex(randomnumber >> 8))
 
 
+0xff0f0f0 #state
 
+0xff0f0f0 # 
+
+0xff00000 # shifted
+
+0xff00000
+
+randomMask = 0x00000000000000000000000000000000000000000000000000000000000000FF
+singleNum = (randomnumber >> 8) & randomMask
+singleNum = singleNum % 49
+print(hex(singleNum), singleNum)
+
+print(1234121 & 0)

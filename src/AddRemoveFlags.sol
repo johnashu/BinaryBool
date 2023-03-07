@@ -72,8 +72,6 @@ contract AddRemoveFlags {
             // AND to create a new state
             let anded := and(state, shifted)
 
-            // check if equal.
-
             // Check if they are equal, if so, it will return the state. else carry on and add the flag..
             if eq(anded, shifted) {
                 state := xor(state, shifted)
