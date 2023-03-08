@@ -114,3 +114,4 @@ grid = add_to_grid(grid, 3, 2)
 display_grid(grid)
 
 
+print(hex(0xf << 252))

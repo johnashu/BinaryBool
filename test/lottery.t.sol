@@ -24,22 +24,22 @@ contract LotteryTest is Test {
         lottery.addWinningNumbersUint();
         bytes32 nums = lottery.winningNumbers();
 
-        lottery.addPlayerNumbers(winner, winningNumbers);
-        lottery.playerNumbers(winner);
+        lottery.addPlayerTickets(winner, winningNumbers);
+        lottery.playerTickets(winner);
 
         lottery.checkWinner(winner);
-        assertEq(lottery.playerNumbers(winner), nums);
+        assertEq(lottery.playerTickets(winner), nums);
 
-        lottery.addPlayerNumbers(loser, losingNumbers);
-        lottery.playerNumbers(loser);
+        lottery.addPlayerTickets(loser, losingNumbers);
+        lottery.playerTickets(loser);
         lottery.checkWinner(loser);
 
-        lottery.addPlayerNumbers(loser, allOn);
+        lottery.addPlayerTickets(loser, allOn);
         lottery.checkWinner(loser);
 
         lottery.resetWinningNumbers();
 
-        lottery.addPlayerNumbers(loser, allOff);
+        lottery.addPlayerTickets(loser, allOff);
         vm.expectRevert();
         lottery.checkWinner(loser);
     }
@@ -48,20 +48,20 @@ contract LotteryTest is Test {
         lottery.addWinningNumbersArray();
         bytes32 nums = lottery.winningNumbers();
 
-        lottery.addPlayerNumbers(winner, winningNumbersArray);
-        lottery.playerNumbers(winner);
+        lottery.addPlayerTickets(winner, winningNumbersArray);
+        lottery.playerTickets(winner);
 
         lottery.checkWinner(winner);
-        assertEq(lottery.playerNumbers(winner), nums);
+        assertEq(lottery.playerTickets(winner), nums);
 
-        lottery.addPlayerNumbers(loser, losingNumbersArray);
-        lottery.playerNumbers(loser);
+        lottery.addPlayerTickets(loser, losingNumbersArray);
+        lottery.playerTickets(loser);
         lottery.checkWinner(loser);
 
-        lottery.addPlayerNumbers(loser, allOn);
+        lottery.addPlayerTickets(loser, allOn);
         lottery.checkWinner(loser);
 
-        lottery.addPlayerNumbers(loser, allOff);
+        lottery.addPlayerTickets(loser, allOff);
         vm.expectRevert();
         lottery.checkWinner(loser);
     }
