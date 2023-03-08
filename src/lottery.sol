@@ -19,8 +19,7 @@ contract Lottery {
     // We will use 1-49 for our lottery numbers which leaves a possible 14 slots for 'other' data.
     /*
                      0123456789...                                 ...49............63*/
-    bytes32 base =
-        0xF000000000000000000000000000000000000000000000000000000000000000; // slot 2
+    bytes32 base = 0xF000000000000000000000000000000000000000000000000000000000000000; // slot 2
 
     //slot 3 - example: 0xFF00F0F00000000000000000000000000F0000000000F000000000000000000F
     // Use a starting mask ( `0xf << 252`) - This will save us GAS as we don't need to execute the shift operation or initialise from 0.
