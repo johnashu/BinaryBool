@@ -44,7 +44,7 @@ contract Lottery {
             let counter
 
             // Should not reach the max 64 unless we have a random number
-            // with many repeating numbers but something to consider!
+            // with many repeating numbers but something to check.
             for { let i } lt(i, 64) { i := add(i, 1) } {
                 // each time we iterate, we will 'push' 4 bits off the end to find the next random number
                 // Shift right by i * 4 bits
@@ -78,6 +78,8 @@ contract Lottery {
             }
             // save state to storage.
             sstore(winningNumbers.slot, state)
+
+            // 0xf00ff0000ff00000000000000000000f000000000000f0000000000000000000
         }
     }
 
@@ -93,22 +95,52 @@ contract Lottery {
     /// @param numbersBytes bytes with selected number position as 'F'
     /// Example - 0xFF00F0F00000000000000000000000000F0000000000F000000000000000000F
     function addPlayerNumbers(address player, bytes32 numbersBytes) public {
-        // Hash Key (player) and slot (0)
-        bytes32 location = keccak256(abi.encode(player, 0x0));
+        // no gas advantage here using assembly..
+        // 22573 / 11573 GAS
+        playerNumbers[player] = numbersBytes;
 
+        // 22668 / 11668 GAS due to the keccak location 'hot' load.
+        // Hash Key (player) and slot (0)
+        // bytes32 location = keccak256(abi.encode(player, 0x0));
+        // assembly {
+        //     // Store new numbers
+        //     sstore(location, numbersBytes)
+        // }
+    }
+
+    /// @notice checks a ticket against the winning numbers
+    /// @dev uses 'and' to compare the players bytes to the winning numbers bytes.
+    ///      reverts on 0 state.
+    /// @param player account to chcek the ticket for.
+    /// @return result of the player if they have won or not.
+    function checkWinner(address player) public returns (bool result) {
+        bytes32 _playerNumbers = keccak256(abi.encode(player, 0x0)); //slot 0
         assembly {
-            // Store new numbers
-            sstore(location, numbersBytes)
+            let state := sload(_playerNumbers)
+            // check the state for 0 as we load this anyway
+            // We dont check winning numbers as even if it is zero,
+            // a non zero state will not return  0 when anded
+            // if the state is zero then anded will ALWAYS be true.
+            if eq(state, 0) { revert(0, 0) }
+
+            // Use 'and' to check the state against the winning numbers.
+            // any matching bits will create a new 32 byte word with only matching
+            // positions (or 0 if there are no matches).
+            let anded := and(sload(winningNumbers.slot), state)
+
+            // Compare anded to our players numbers state.
+            // If they are an exact match, the result will be true and thus a winner.
+            result := eq(anded, state)
         }
     }
 
     /// @dev PlaceHolder to add an array of numbers to bytes32 word.
     /// Should come from a trusted VRF source such as onChain or chainlink (Oracle)
     function addWinningNumbersArray() public {
-        _addNumbersToBytes(winningNumbersArray);
+        _addNumbersToBytesFromArray(winningNumbersArray);
     }
 
-    function _addNumbersToBytes(uint256[] memory arr) public {
+    function _addNumbersToBytesFromArray(uint256[] memory arr) public {
         assembly {
             // where array is stored in memory (0x80)
             let location := arr
@@ -139,17 +171,6 @@ contract Lottery {
             }
             // update the variable with the new numbers
             sstore(winningNumbers.slot, state)
-        }
-    }
-
-    function checkWinner(address player) public returns (bool result) {
-        bytes32 _playerNumbers = keccak256(abi.encode(player, 0x0)); //slot 0
-        assembly {
-            let state := sload(_playerNumbers)
-            if eq(state, 0){
-                revert(0, 0)
-            }
-            result := eq(and(sload(winningNumbers.slot), state), state)
         }
     }
 }

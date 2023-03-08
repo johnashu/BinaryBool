@@ -37,6 +37,8 @@ contract LotteryTest is Test {
         lottery.addPlayerNumbers(loser, allOn);
         lottery.checkWinner(loser);
 
+        lottery.resetWinningNumbers();
+
         lottery.addPlayerNumbers(loser, allOff);
         vm.expectRevert();
         lottery.checkWinner(loser);
